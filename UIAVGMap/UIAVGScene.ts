@@ -21,6 +21,7 @@ import { Color } from "cc";
 import { TipsNoticeUtil } from "../gameplay/Utility/TipsNoticeUtil";
 import ConfigManager from "../manager/Config/ConfigManager";
 import { StorySystem } from "../gameplay/Manager/StorySystem";
+import { ConditionMgr } from "../gameplay/Manager/ConditionMgr";
 
 const { ccclass, property } = _decorator;
 
@@ -79,6 +80,9 @@ export class UIAVGScene extends CCComp {
         if (this.Id == 0) {
             return;
         }
+        let count = GameData.PlayerData.AVGData.sceneEnterCount.get(this.Id) || 0;
+        GameData.PlayerData.AVGData.sceneEnterCount.set(this.Id, count+1);
+
         const cfg = ConfigManager.tables.TbAVGScene.get(this.Id)!;
         
         let prb = await this.loadPrefab(cfg.Path);
@@ -113,11 +117,29 @@ export class UIAVGScene extends CCComp {
         }
         // 
         let storyId = -1;
-
-        storyId = 0;
+        for (let i = 0; i < cfg.EventStoryCondition.length; i++) {
+            if (ConditionMgr.inst.checkCondition(cfg.EventStoryCondition[i])) {
+                storyId = i;
+                break;
+            }
+        }
         if (storyId < 0) {
             return false;
         }
+
+        // 
+        if (!cfg.storyisrepeat[storyId]) {
+            let k = ""+this.Id + cfg.EventStoryId[storyId];
+            if (!GameData.PlayerData.AVGData.EventStoryState.has(k)) {
+                GameData.PlayerData.AVGData.EventStoryState.set(k, true);
+            }
+            else {
+                if (GameData.PlayerData.AVGData.EventStoryState.get(k)) {
+                    return false;
+                }
+            }
+        }
+
 
         // ()
         console.error("TODO: () ", cfg.EventStoryId[storyId]);
@@ -137,6 +159,8 @@ export class UIAVGScene extends CCComp {
         if (gameId < 0) {
             return false;
         }
+
+        // 
 
         // ()
         console.error("TODO: () ", cfg.EventGameId[gameId]);
