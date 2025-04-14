@@ -20,7 +20,7 @@ export enum ConditionType {
     RuCan = 5,              //
     Guide = 6,
     StoryComplete = 7,      //
-    EnterUITimeWithAvatorId = 8, //UI id  uiid id
+    EnterAVGSceneCount = 8, //
     HeroineLv = 9,//
 }
 
@@ -166,8 +166,8 @@ export class ConditionMgr {
                 let res = StorySystem.Instance.IsLookComplete(condition.Param1) ? 2 : 0;
                 return res;
 
-            case ConditionType.EnterUITimeWithAvatorId:
-                let time2 = GameData.GetOpenUICountWithAvatorId(condition.Param1, condition.Param2);
+            case ConditionType.EnterAVGSceneCount:
+                let time2 = GameData.PlayerData.AVGData.sceneEnterCount.get(condition.Param1) ?? 1;
                 return time2;
             case ConditionType.HeroineLv://
                 let heroineLv = HeroineDataManager.Instance.getLvCur();

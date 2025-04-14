@@ -21,6 +21,7 @@ import { Color } from "cc";
 import { TipsNoticeUtil } from "../gameplay/Utility/TipsNoticeUtil";
 import ConfigManager from "../manager/Config/ConfigManager";
 import { UIAVGMapSub } from "./UIAVGMapSub";
+import { AVGData } from "../gameplay/GameDataModel/AVGData";
 
 const { ccclass, property } = _decorator;
 
@@ -82,6 +83,8 @@ export class UIAVGMap extends CCComp {
                 this.go.destroy();
             }
 
+            // 
+            GameData.PlayerData.AVGData = new AVGData();
             this.go = instantiate(prb);
             this.go.getComponent(UIAVGMapSub)!.Init(this.Id);
             this.Root.addChild(this.go);

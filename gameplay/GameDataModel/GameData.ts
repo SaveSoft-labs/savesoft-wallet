@@ -22,6 +22,7 @@ import { GuideData, GuideState } from './GuideData';
 import { SdkManager } from '../../../modules/sdk/SdkManager';
 import { readSync } from 'fs';
 import { HeroineData } from './HeroineData';
+import { AVGData } from './AVGData';
 
 const { ccclass } = _decorator;
 
@@ -59,6 +60,8 @@ export class PlayerData extends SerializeClass {
     /**  */
     @SerializeData()
     TalkDic: Map<number,number> = new Map();
+    @SerializeData()
+    AVGData: AVGData = new AVGData();
 }
 //#endregion 
 
