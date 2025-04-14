@@ -58,10 +58,14 @@ export class UIBoyFriend extends CCComp {
     nodeHandTap: Node = null!;
     @property(Node)
     nodeLastBoy: Node = null!;
+    @property(Node)
+    nodeLastBoyLock: Node = null!
     @property(Label)
     labLastBoyName: Label = null!;
     @property(Node)
     nodeNextBoy: Node = null!;
+    @property(Node)
+    nodeNextBoyLock: Node = null!
     @property(Label)
     labNextBoyName: Label = null!;
     // @property(Node)
@@ -290,6 +294,12 @@ export class UIBoyFriend extends CCComp {
 
         this.labLastBoyName.string = this._selectBFHeadIdx > 0 ? bfList[this._selectBFHeadIdx-1].Name : "";
         this.labNextBoyName.string = (this._selectBFHeadIdx+1) < count ? bfList[this._selectBFHeadIdx+1].Name : "";
+        
+        const lastBoyId = this._selectBFHeadIdx > 0 ? bfList[this._selectBFHeadIdx].Id : -1;
+        const nextBoyId = this._selectBFHeadIdx < (count-1) ? bfList[this._selectBFHeadIdx + 1].Id : -1;
+
+        this.nodeLastBoyLock.active = PlayerSystem.Instance.IsBoyFriendUnlock(lastBoyId);
+        this.nodeNextBoyLock.active = PlayerSystem.Instance.IsBoyFriendUnlock(nextBoyId);
 
         if(!this._curHeadBottomIsOpen && this._selectBFHeadIdx > 0) {
             return;
@@ -372,7 +382,7 @@ export class UIBoyFriend extends CCComp {
     }
 
     private async _updateInteractionIcon(url: string) {
-        let spF = await Utility.loadImage(url, "UIBoyFriend");
+        let spF = await Utility.loadImage(url, "UIHome");
         if (spF) {
             this.spInteractionIn.spriteFrame = this.spInteractionOut.spriteFrame = spF;
             this.spInteractionIn.sizeMode = this.spInteractionOut.sizeMode = Sprite.SizeMode.RAW; // 
@@ -428,10 +438,10 @@ export class UIBoyFriend extends CCComp {
     //#region 
 
 
-    private async onClickBack() {
-        await oops.gui.openAsync(UIID.UIMain); // todo:  ? 
+    private onClickBack() {
         oops.gui.remove(UIID.UIBoyFriend);
         UIMainVideoComp.getInstance().stop(); // todo:  ?
+        oops.gui.open(UIID.UIMain); // todo:  ? 
     }
     // 
     private onClickHeadBottomOpen(){
@@ -520,6 +530,11 @@ export class UIBoyFriend extends CCComp {
     ///
     private onClickTapChanged(event: EventTouch, data: any) {
         let id = parseInt(data);
+        if(id == 0 || PlayerSystem.Instance.GetInteractionType() == id) {
+            // TipsNoticeUtil.PlayNotice(");
+            console.log("");
+            return;
+        }
         //
         let [isUnlock, lv, Name] = HeartSystem.Instance.IsInterUnlocked(id);
         if (!isUnlock) {
@@ -534,10 +549,10 @@ export class UIBoyFriend extends CCComp {
         
         PlayerSystem.Instance.SetInteractionType(id);
         this._updateInteractionUI();
-
-        if (GameData.GetGuideStep()>=1120) {
-            this._playInterVideo();
-        }
+        this._playInterVideo();
+        // if (GameData.GetGuideStep()>=1120) {
+        //     this._playInterVideo();
+        // }
     }
     // 
     private onClickInteractioClose(event: EventTouch, data: any) {
