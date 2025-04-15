@@ -360,6 +360,8 @@ export class TrAVGMap {
         { let n = Math.min(_buf_.ReadSize(), _buf_.Size); this.Bgunlock = []; for(let i = 0 ; i < n ; i++) { let _e0; _e0 = _buf_.ReadInt(); this.Bgunlock.push(_e0);}}
         this.Text = _buf_.ReadString()
         { let n = Math.min(_buf_.ReadSize(), _buf_.Size); this.ScenegroupId = []; for(let i = 0 ; i < n ; i++) { let _e0; _e0 = _buf_.ReadInt(); this.ScenegroupId.push(_e0);}}
+        { let n = Math.min(_buf_.ReadSize(), _buf_.Size); this.Win = []; for(let i = 0 ; i < n ; i++) { let _e0; _e0 = _buf_.ReadInt(); this.Win.push(_e0);}}
+        this.EnterScenegroupId = _buf_.ReadInt()
     }
 
     /**
@@ -398,8 +400,18 @@ export class TrAVGMap {
      * id
      */
     readonly ScenegroupId: number[]
+    /**
+     * 
+     */
+    readonly Win: number[]
+    /**
+     * id
+     */
+    readonly EnterScenegroupId: number
 
     resolve(tables:Tables) {
+        
+        
         
         
         
