@@ -176,7 +176,7 @@ export class Demo extends GameComponent {
 
     /**  */
     private netInstableOpen(event: EventTouch, data: any) {
-        oops.gui.waitOpen();
+        oops.gui.waitOpen("demo");
         setTimeout(() => {
             oops.gui.waitClose();
         }, 2000);
